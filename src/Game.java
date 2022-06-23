@@ -40,6 +40,32 @@ public class Game extends JComponent implements ActionListener {
     }
 
     public void drawCeil (Graphics graph, int i, int j) {
+        int x = fields[i][j];
+        Color y;
+        if (x <= 8) {
+            y = Color.yellow;
+        } else if (x <= 64) {
+            y = Color.green;
+            x /= 8;
+        } else if (x <= 256) {
+            y = Color.blue;
+            x /= 64;
+        } else if (x <= 1024) {
+            y = Color.red;
+            x /= 256;
+        } else {
+            y = Color.lightGray;
+            x /= 1024;
+        }
+
+        while (x > 2) {
+            for (int cnt = 0; cnt < Const.DARK; ++cnt) {
+                y = y.darker();
+            }
+            x /= 2;
+        }
+        graph.setColor(y);
+        graph.fillRect(Const.SX + i * Const.CEIL_SIZE, Const.SY + j * Const.CEIL_SIZE, Const.CEIL_SIZE, Const.CEIL_SIZE);
         graph.setFont(new Font("Arial", Font.PLAIN, Const.TEXT_SIZE));
         graph.setColor(Color.BLACK);
         graph.drawString(String.valueOf(fields[i][j]), Const.SX + i * Const.CEIL_SIZE, Const.SY + (j + 1) * Const.CEIL_SIZE);
@@ -228,8 +254,6 @@ public class Game extends JComponent implements ActionListener {
         JOptionPane.showMessageDialog(this, message, title, JOptionPane.INFORMATION_MESSAGE);
     }
 
-    //как же он чувствует
-
     private class TAdapter extends KeyAdapter {
 
         @Override
@@ -240,7 +264,6 @@ public class Game extends JComponent implements ActionListener {
             int key = e.getKeyCode();
             Log.status(String.valueOf(key) + " " + String.valueOf(KeyEvent.VK_UP));
             save();
-            //как же он костылит
             if (key == KeyEvent.VK_UP) {
                 goUp();
             }
